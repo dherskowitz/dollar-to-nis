@@ -89,7 +89,7 @@ Project Link: [https://github.com/dherskowitz/dollar-to-nis](https://github.com/
 [issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=flat-square
 [issues-url]: https://github.com/dherskowitz/dollar-to-nis/issues
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=flat-square
-[license-url]: https://github.com/dherskowitz/dollar-to-nis/blob/master/LICENSE.txt/LICENSE.txt
+[license-url]: https://github.com/dherskowitz/dollar-to-nis/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/daniel-herskowitz-405b95140/
 [product-screenshot]: https://dollar-to-nis.vercel.app/screenshot.png
