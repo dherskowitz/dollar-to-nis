@@ -29,9 +29,6 @@
 
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
 * [Roadmap](#roadmap)
 * [License](#license)
 <!-- * [Contact](#contact) -->
@@ -95,4 +92,4 @@ Project Link: [https://github.com/dherskowitz/dollar-to-nis](https://github.com/
 [license-url]: https://github.com/dherskowitz/dollar-to-nis/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: /screenshot.png
+[product-screenshot]: https://dollar-to-nis.vercel.app/screenshot.png
