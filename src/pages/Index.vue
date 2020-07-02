@@ -58,7 +58,8 @@ export default {
   },
   methods: {
     setData(data) {
-      let date = date = new Date(`${data.last_updated} UTC`);
+      const regex = /am|pm/gi;
+      let date = new Date(`${data.last_updated.replace(regex, '')} UTC`);
       this.last_updated = `Last updated on ${date.toDateString()} at ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
       this.usd.usd = data.USD.USD.toFixed(2);
       this.usd.ils = data.USD.ILS.toFixed(2);
