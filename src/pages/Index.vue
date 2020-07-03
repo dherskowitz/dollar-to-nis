@@ -112,9 +112,8 @@ export default {
       let last_updated_utc = new Date(`${last_updated} UTC`);
       let now = new Date();
       let diffTime = Math.abs(last_updated_utc - now);
-      let diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-      console.log(diffHours);
-      return diffHours;
+      let diffHours = (diffTime / (1000 * 60 * 60)).toFixed(2);
+      return parseFloat(diffHours);
     },
   },
   mounted() {
@@ -166,6 +165,10 @@ export default {
 .exchange__amount {
   width: 6rem;
   font-size: 1.5rem;
+  padding: 5px 0 5px 0.5rem;
+  border-radius: 0.25rem;
+  border: none;
+  margin-right: 0.5rem;
 }
 @media (max-width: 580px) {
   .home__inner {
