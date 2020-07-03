@@ -5,7 +5,13 @@
         <h1 class="home__title">Dollar to NIS</h1>
         <p>{{base}} to {{ base == "USD" ? "ILS" : "USD" }}</p>
         <p v-if="isLoading" class="gradient loadingbar1"></p> 
-        <p v-else>{{rate}}</p>
+        <div v-else>
+          <p>{{rate}}</p>
+          <div class="exchange">
+            <input class="exchange__amount" v-on:keyup="convert" v-model="exchangeAmount"> =
+            <span class="exchange__amount">{{exchangeResult}}</span>
+          </div>
+        </div>
         <div class="changeDirection">
           <input
             @change="changeDirection($event)"
@@ -53,13 +59,22 @@ export default {
       last_updated: "",
       rate: "",
       direction: "usd-ils",
-      isLoading: true
+      isLoading: true,
+      exchangeAmount: "1",
+      exchangeResult: ""
     };
   },
   methods: {
+    convert() {
+      if (this.direction == "usd-ils") {
+        this.exchangeResult = parseFloat(this.exchangeAmount * this.usd.ils).toFixed(2);
+      } else {
+        this.exchangeResult = parseFloat(this.exchangeAmount * this.ils.usd).toFixed(2);
+      }
+    },
     setData(data) {
       const regex = /am|pm/gi;
-      let date = new Date(`${data.last_updated.replace(regex, '')} UTC`);
+      let date = new Date(`${data.last_updated.replace(regex, '').trim()} UTC`);
       this.last_updated = `Last updated on ${date.toDateString()} at ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
       this.usd.usd = data.USD.USD.toFixed(2);
       this.usd.ils = data.USD.ILS.toFixed(2);
@@ -68,11 +83,17 @@ export default {
       this.rate = `\u0024${this.usd.usd} = \u20AA${this.usd.ils}`;
       this.isLoading = !this.isLoading;
     },
+    setCache(data) {
+      localStorage.setItem("last_updated", data.last_updated);
+      localStorage.setItem("rates", JSON.stringify(data));
+    },
     async getRate() {
       let now = new Date();
       const rate = await fetch("/api/currency");
       const res = await rate.json();
       this.setData(res);
+      this.setCache(res);
+      this.convert();
     },
     changeDirection(event) {
       if (this.direction == "usd-ils") {
@@ -84,10 +105,25 @@ export default {
         this.base = "USD";
         this.rate = `\u0024${this.usd.usd} = \u20AA${this.usd.ils}`;
       }
-    }
+      this.convert();
+    },
+    hoursSinceUpdated() {
+      let last_updated = localStorage.getItem("last_updated").replace(/am|pm/gi, '').trim();
+      let last_updated_utc = new Date(`${last_updated} UTC`);
+      let now = new Date();
+      let diffTime = Math.abs(last_updated_utc - now);
+      let diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+      console.log(diffHours);
+      return diffHours;
+    },
   },
   mounted() {
-    this.getRate();
+    if (!localStorage.getItem("last_updated") || this.hoursSinceUpdated() > 4) {
+      this.getRate();
+    } else {
+      this.setData(JSON.parse(localStorage.getItem("rates")));
+      this.convert();
+    }
   }
 };
 </script>
@@ -122,6 +158,14 @@ export default {
 .last_updated {
   font-size: 0.8rem;
   margin: 0;
+}
+.exchange {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.exchange__amount {
+  width: 6rem;
+  font-size: 1.5rem;
 }
 @media (max-width: 580px) {
   .home__inner {
