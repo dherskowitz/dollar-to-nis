@@ -11,6 +11,7 @@
     "gridsome-plugin-pwa": "0.0.18"
   },
   "devDependencies": {
+    "@gridsome/cli": "^0.3.3",
     "gridsome-plugin-service-worker": "^0.1.5"
   }
 }
