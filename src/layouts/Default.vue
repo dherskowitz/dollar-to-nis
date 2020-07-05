@@ -1,5 +1,6 @@
 <template>
   <div class="layout">
+    <noscript v-html="`<div id='noscript'>This site requires javascript.</div>`"/>
     <video autoplay muted loop id="myVideo">
       <source src="/currency_video.mp4" type="video/mp4" preload="auto"/>
     </video>
@@ -41,5 +42,16 @@ body {
 p {
   font-size: 1.5rem;
   margin-bottom: 1.25rem;
+}
+#noscript {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
+  color: #fff;
+  text-align: center;
+  z-index: 999999;
+  background: red;
 }
 </style>
