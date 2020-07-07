@@ -38,6 +38,7 @@ body {
   min-width: 100%;
   min-height: 100%;
   z-index: -1;
+  margin: 0;
 }
 p {
   font-size: 1.5rem;
