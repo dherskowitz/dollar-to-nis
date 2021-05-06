@@ -4,12 +4,12 @@
       <div class="home__inner">
         <h1 class="home__title">Dollar to NIS</h1>
         <p>{{base}} to {{ base == "USD" ? "ILS" : "USD" }}</p>
-        <p v-if="isLoading" class="gradient loadingbar1"></p> 
+        <p v-if="isLoading" class="gradient loadingbar1"></p>
         <div v-else>
           <p>{{rate}}</p>
           <div class="exchange">
             <input class="exchange__amount" v-on:keyup="convert" v-model="exchangeAmount"> =
-            <span class="exchange__amount">{{exchangeResult}}</span>
+            <span class="exchange__amount">{{exchangeResultFixed}}</span>
           </div>
         </div>
         <div class="changeDirection">
@@ -33,8 +33,7 @@
           />
           <label for="toggle-off" class="btn">ILS to USD</label>
         </div>
-        <p v-if="isLoading" class="gradient loadingbar2"></p>
-        <p v-else class="last_updated">{{last_updated}}</p>
+        <p v-if="!isLoading" class="last_updated">{{last_updated}}</p>
       </div>
     </section>
   </Layout>
@@ -47,14 +46,8 @@ export default {
   },
   data() {
     return {
-      usd: {
-        usd: "",
-        ils: ""
-      },
-      ils: {
-        usd: "",
-        ils: ""
-      },
+      usd: "",
+      ils: "",
       base: "USD",
       last_updated: "",
       rate: "",
@@ -64,31 +57,33 @@ export default {
       exchangeResult: ""
     };
   },
+  computed: {
+    exchangeResultFixed: function () {
+      return this.exchangeResult.toFixed(2)
+    }
+  },
   methods: {
     convert() {
       if (this.direction == "usd-ils") {
-        this.exchangeResult = parseFloat(this.exchangeAmount * this.usd.ils).toFixed(2);
+        this.exchangeResult = parseFloat(this.exchangeAmount) * this.usd;
       } else {
-        this.exchangeResult = parseFloat(this.exchangeAmount * this.ils.usd).toFixed(2);
+        this.exchangeResult = parseFloat(this.exchangeAmount) * this.ils;
       }
     },
     setData(data) {
       const regex = /am|pm/gi;
-      let date = new Date(`${data.last_updated.replace(regex, '').trim()} UTC`);
+      let date = new Date();
       this.last_updated = `Last updated on ${date.toDateString()} at ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      this.usd.usd = data.USD.USD.toFixed(2);
-      this.usd.ils = data.USD.ILS.toFixed(2);
-      this.ils.usd = data.ILS.USD.toFixed(2);
-      this.ils.ils = data.ILS.ILS.toFixed(2);
-      this.rate = `\u0024${this.usd.usd} = \u20AA${this.usd.ils}`;
+      this.usd = data.USD_ILS;
+      this.ils = data.ILS_USD;
+      this.rate = `\u0024${this.usd.toFixed(2)} = \u20AA${this.ils.toFixed(2)}`;
       this.isLoading = !this.isLoading;
     },
     setCache(data) {
-      localStorage.setItem("last_updated", data.last_updated);
+      localStorage.setItem("last_updated", JSON.stringify(new Date()))
       localStorage.setItem("rates", JSON.stringify(data));
     },
     async getRate() {
-      let now = new Date();
       const rate = await fetch("/api/currency");
       const res = await rate.json();
       this.setData(res);
@@ -99,11 +94,11 @@ export default {
       if (this.direction == "usd-ils") {
         this.direction = "ils-usd";
         this.base = "ILS";
-        this.rate = `\u20AA${this.ils.ils} = \u0024${this.ils.usd}`;
+        this.rate = `\u20AA${this.ils.toFixed(2)} = \u0024${this.usd.toFixed(2)}`;
       } else {
         this.direction = "usd-ils";
         this.base = "USD";
-        this.rate = `\u0024${this.usd.usd} = \u20AA${this.usd.ils}`;
+        this.rate = `\u0024${this.usd.toFixed(2)} = \u20AA${this.ils.toFixed(2)}`;
       }
       this.convert();
     },
